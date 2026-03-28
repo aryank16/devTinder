@@ -66,10 +66,20 @@ const userSchema = new mongoose.Schema({
         }
     }
     },
+
+     
+  about: {
+    type: String,
+    trim: true,
+    maxLength: 500,
+    default: ""
+  },
+    
     skills:{
         type: [String]
     },
-    
+
+   
 
 },
 {

@@ -8,7 +8,7 @@ const user = require('../models/user');
 
 const userRouter = express.Router();
 
-const USER_SAFE_DATA = 'firstName lastName photoUrl skills'
+const USER_SAFE_DATA = 'firstName lastName photoUrl skills about age gender'
 
 userRouter.get('/user/requests/received', userAuth, async(req,res)=>{
 
@@ -98,7 +98,7 @@ userRouter.get('/feed', userAuth, async(req,res)=>{
             hideUserFromFeed.add(req.toUserId.toString())
         })
 
-        console.log(hideUserFromFeed)
+        
 
         const users = await user.find({
 

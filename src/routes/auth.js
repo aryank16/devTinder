@@ -15,7 +15,7 @@ authRouter.post('/signup', async(req,res)=>{
 
          validateSignUpData(req);
 
-         console.log(req.body);
+         
 
          const { firstName, lastName, emailId, password,age } = req.body;
 
@@ -24,7 +24,7 @@ authRouter.post('/signup', async(req,res)=>{
         // hashing the password before saving to database 
 
         const passwordHash = await bcrypt.hash(req.body.password, 10);
-        console.log("Hashed password: ", passwordHash);  
+        
         
 
         
@@ -40,9 +40,16 @@ authRouter.post('/signup', async(req,res)=>{
 
 
         );
+        const savedUser = await user.save();
+        const token = await savedUser.getJWT();
+            // add the token to the cookie and send response to client
+            res.cookie('token', token,{
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Set cookie to expire in 7 days
+            })
+           
 
-        await user.save();
-        res.send("User created successfully");
+       
+        res.json({message:"User created successfully", data:savedUser});
         
     } catch (error) {
         res.status(400).send("ERROR: " + error.message)
@@ -50,8 +57,8 @@ authRouter.post('/signup', async(req,res)=>{
     
 
 
-}); 
 
+}); 
 
 
 
@@ -83,7 +90,7 @@ authRouter.post('/login', async(req,res)=>{
 
             // add the token to the cookie and send response to client
             res.cookie('token', token)
-            res.send("Login successful");
+            res.send(user);
 
         }
         else{
